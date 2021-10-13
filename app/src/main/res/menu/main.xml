@@ -4,15 +4,22 @@
     tools:context="org.example.canvasdemo.MainActivity">
 
     <item
+        android:id="@+id/action_pause_resume_game"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title=""
+        android:icon="@drawable/ic_pause_white_24dp"
+        />
+
+    <item
         android:id="@+id/action_newGame"
         android:orderInCategory="100"
         app:showAsAction="ifRoom"
-        android:title="@string/newgame"/>
+        android:title="@string/newGame"/>
 
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/action_settings"/>
-
 </menu>

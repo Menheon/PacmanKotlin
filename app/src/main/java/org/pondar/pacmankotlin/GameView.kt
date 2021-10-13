@@ -2,24 +2,21 @@ package org.pondar.pacmankotlin
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 
-
-//note we now create our own view class that extends the built-in View class
+// Custom view for the game.
 class GameView : View {
-
     private lateinit var game: Game
+
+    // Height and width of the game view.
     private var h: Int = 0
-    private var w: Int = 0 //used for storing our height and width of the view
+    private var w: Int = 0
 
     fun setGame(game: Game) {
         this.game = game
     }
-
 
     /* The next 3 constructors are needed for the Android view system,
 	when we have a custom view.
@@ -28,38 +25,72 @@ class GameView : View {
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    //In the onDraw we put all our code that should be
-    //drawn whenever we update the screen.
+    // Draw functionality for the canvas.
     override fun onDraw(canvas: Canvas) {
-        //Here we get the height and weight
+        // Here we get the height and weight.
         h = height
         w = width
-        //update the size for the canvas to the game.
+        // Update the size for the canvas to the game.
         game.setSize(h, w)
-        Log.d("GAMEVIEW", "h = $h, w = $w")
 
-        //are the coins initiazlied?
-        //if not initizlise them
-        if (!(game.coinsInitialized))
-            game.initializeGoldcoins()
+        // Initialize coins, cherries and enemies if not already initialized.
+        if (!game.isPickupItemsInitialized) {
+            game.initializePickupItems(game.coinAmount, game.coins, R.drawable.gold_coin)
+            game.initializePickupItems(game.cherryAmount, game.cherries, R.drawable.cherry)
+        }
+        if (!game.isGhostsInitialized)
+            game.initializeGhosts()
 
-
-        //Making a new paint object
+        // Making a new paint object
         val paint = Paint()
-        canvas.drawColor(Color.WHITE) //clear entire canvas to white color
 
-        //draw the pacman
-        canvas.drawBitmap(game.pacBitmap, game.pacx.toFloat(),
-                game.pacy.toFloat(), paint)
-
-        //TODO loop through the list of goldcoins and draw them here
-
-
+        // Loop through the list of gold coins and draw them on the canvas.
+        for (coin in game.coins) {
+            if (!coin.isConsumed) {
+                canvas.drawBitmap(
+                    coin.bitmap,
+                    coin.coordX.toFloat(),
+                    coin.coordY.toFloat(),
+                    paint
+                )
+            }
+        }
+        // Loop through the list of cherries and draw them on the canvas.
+        for (cherry in game.cherries) {
+            if (!cherry.isConsumed) {
+                canvas.drawBitmap(
+                    cherry.bitmap,
+                    cherry.coordX.toFloat(),
+                    cherry.coordY.toFloat(),
+                    paint
+                )
+            }
+        }
+        // Loop through the list of ghosts and draw them on the canvas.
+        for (ghost in game.ghosts) {
+            if (!ghost.isConsumed) {
+                canvas.drawBitmap(
+                    ghost.bitmap,
+                    ghost.coordX.toFloat(),
+                    ghost.coordY.toFloat(),
+                    paint
+                )
+            }
+        }
+        // Draw Pacman on the canvas.
+        if (!game.isConsumed) {
+            canvas.drawBitmap(
+                game.pacBitmap, game.pacX.toFloat(),
+                game.pacY.toFloat(), paint
+            )
+        }
         game.doCollisionCheck()
         super.onDraw(canvas)
     }
-
 }
