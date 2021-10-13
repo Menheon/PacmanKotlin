@@ -376,7 +376,7 @@ class Game(private var context: Context, view: TextView) {
                 pointsView.text =
                     context.resources.getString(R.string.points, currentPoints)
             }
-            if (currentPoints == maxPoints) {
+            if (currentPoints >= maxPoints) { // TODO fix bug where it is possible to get more than max points.
                 isGameWon = true
                 isGameOver = true
             }

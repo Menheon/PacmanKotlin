@@ -12,7 +12,7 @@ class Ghost(context: Context, resourceId: Int) : Entity(context, resourceId) {
         if (!isVulnerable && !isConsumed)
             speed = pixels
         else if (isVulnerable && !isConsumed)
-            speed = pixels * 2
+            speed = pixels + 2
         if (coordX + speed + bitmap.width < boundaryWidth) {
             coordX += speed
         }
@@ -24,7 +24,7 @@ class Ghost(context: Context, resourceId: Int) : Entity(context, resourceId) {
         if (!isVulnerable && !isConsumed)
             speed = pixels
         else if (isVulnerable && !isConsumed)
-            speed = pixels * 2
+            speed = pixels + 2
         if (coordX - speed > 0) {
             coordX -= speed
         }
@@ -36,7 +36,7 @@ class Ghost(context: Context, resourceId: Int) : Entity(context, resourceId) {
         if (!isVulnerable && !isConsumed)
             speed = pixels
         else if (isVulnerable && !isConsumed)
-            speed = pixels * 2
+            speed = pixels + 2
         if (coordY + speed + bitmap.height < boundaryHeight) {
             coordY += speed
         }
@@ -48,7 +48,7 @@ class Ghost(context: Context, resourceId: Int) : Entity(context, resourceId) {
         if (!isVulnerable && !isConsumed)
             speed = pixels
         else if (isVulnerable && !isConsumed)
-            speed = pixels * 2
+            speed = pixels + 2
         if (coordY - speed > 0) {
             coordY -= speed
         }

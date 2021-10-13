@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private var pacmanTimer: Timer = Timer()
     private var gameTimer: Timer = Timer()
     private var isGameRunning = false
+    private var gameStatusTxt = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,32 +78,34 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             if (game.isGameWon) {
                 game.isGameOver = true
-                this.runOnUiThread {
-                    var lvlCompletionTxt =
-                        getString(R.string.levelCompleted, game.currentPoints)
-                    var winningToast =
-                        Toast.makeText(this, lvlCompletionTxt, Toast.LENGTH_LONG)
-                    winningToast.show()
-                }
+                gameStatusTxt =
+                    getString(R.string.levelCompleted, game.currentPoints)
             } else if ((game.countDownTime == 0 && !game.isGameWon) || game.isConsumed) {
                 game.isGameOver = true
-                this.runOnUiThread {
-                    var lvlLostTxt =
-                        getString(R.string.levelLost, game.currentPoints, game.maxPoints)
-                    var losingToast = Toast.makeText(this, lvlLostTxt, Toast.LENGTH_LONG)
-                    losingToast.show()
-                }
+                gameStatusTxt =
+                    getString(R.string.levelLost, game.currentPoints, game.maxPoints)
+            }
+            if (game.isGameOver) {
+                this.runOnUiThread(displayGameStatusToast)
             }
         }
     }
 
+    private val displayGameStatusToast = Runnable() {
+        var gameStatusToast =
+            Toast.makeText(this, gameStatusTxt, Toast.LENGTH_SHORT)
+        gameStatusToast.show()
+    }
+
     // Called by the game timer.
     private fun timerCountDown() {
-        this.runOnUiThread {
-            if (isGameRunning && !game.isGameOver) {
-                game.countDownTime--
-                binding.gameTimerView.text = getString(R.string.gameTimer, game.countDownTime)
-            }
+        this.runOnUiThread(displayGameTimerStatus)
+    }
+
+    private val displayGameTimerStatus = Runnable() {
+        if (isGameRunning && !game.isGameOver) {
+            game.countDownTime--
+            binding.gameTimerView.text = getString(R.string.gameTimer, game.countDownTime)
         }
     }
 
