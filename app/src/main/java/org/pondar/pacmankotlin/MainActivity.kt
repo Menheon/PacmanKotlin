@@ -99,13 +99,11 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     // Called by the game timer.
     private fun timerCountDown() {
-        this.runOnUiThread(displayGameTimerStatus)
-    }
-
-    private val displayGameTimerStatus = Runnable() {
         if (isGameRunning && !game.isGameOver) {
             game.countDownTime--
-            binding.gameTimerView.text = getString(R.string.gameTimer, game.countDownTime)
+            binding.gameTimerView.post {
+                binding.gameTimerView.text = getString(R.string.gameTimer, game.countDownTime)
+            }
         }
     }
 
@@ -120,12 +118,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         if (isGameRunning) {
             // Converts the rotation vector to a rotation matrix.
-            var rotationMatrix = FloatArray(9);
-            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+            var rotationMatrix = FloatArray(9)
+            SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
 
             // Compute the devices orientation based on the orientation matrix.
-            var axisRotations = FloatArray(3);
-            SensorManager.getOrientation(rotationMatrix, axisRotations);
+            var axisRotations = FloatArray(3)
+            SensorManager.getOrientation(rotationMatrix, axisRotations)
 
             // Convert the orientation angles from radians to degrees.
             val axisX = axisRotations[1] * 180 / Math.PI
